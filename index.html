@@ -35,6 +35,47 @@ nav{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:100;back
 .nav-cta{background:linear-gradient(135deg,var(--gold),var(--gold2));color:#06060f;font-weight:700;font-size:14px;padding:10px 22px;border-radius:999px;border:none;cursor:pointer;transition:opacity 0.2s,transform 0.2s;white-space:nowrap;letter-spacing:0.2px}
 .nav-cta:hover{opacity:0.88;transform:scale(1.03)}
 section{position:relative;z-index:1}
+
+/* PANCAKE MENU */
+.pancake-btn{
+  position:fixed;bottom:32px;right:32px;z-index:200;
+  width:52px;height:52px;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:none;cursor:pointer;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+  box-shadow:0 0 30px rgba(240,165,0,0.45),0 8px 24px rgba(0,0,0,0.4);
+  transition:transform 0.2s,box-shadow 0.2s;
+}
+.pancake-btn:hover{transform:scale(1.08);box-shadow:0 0 50px rgba(240,165,0,0.65),0 8px 24px rgba(0,0,0,0.4)}
+.pancake-btn .bar{width:22px;height:2.5px;background:#06060f;border-radius:2px;transition:all 0.3s}
+.pancake-btn.open .bar:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.pancake-btn.open .bar:nth-child(2){opacity:0;transform:scaleX(0)}
+.pancake-btn.open .bar:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+
+.nav-overlay{
+  position:fixed;inset:0;z-index:190;
+  background:rgba(6,6,15,0.97);
+  backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s;
+}
+.nav-overlay.open{opacity:1;pointer-events:all}
+.nav-overlay-item{
+  display:flex;align-items:center;gap:16px;
+  padding:16px 40px;border-radius:16px;
+  font-family:'Space Grotesk',sans-serif;
+  font-size:clamp(28px,5vw,48px);font-weight:700;
+  color:rgba(255,255,255,0.25);
+  cursor:pointer;border:none;background:transparent;
+  transition:color 0.2s,transform 0.2s;
+  letter-spacing:-1px;width:100%;max-width:500px;
+  text-align:left;
+}
+.nav-overlay-item:hover{color:var(--white);transform:translateX(8px)}
+.nav-overlay-item .nav-num{font-size:14px;font-weight:600;color:var(--gold);letter-spacing:2px;min-width:32px}
+.nav-overlay-foot{margin-top:40px;font-size:14px;color:var(--gray2);text-align:center}
+.nav-overlay-foot a{color:var(--gold);font-weight:600}
 .hero{min-height:100vh;display:flex;align-items:center;padding:140px 40px 80px;max-width:1200px;margin:0 auto;gap:60px}
 .hero-left{flex:1;min-width:0}
 .hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(240,165,0,0.1);border:1px solid rgba(240,165,0,0.3);border-radius:999px;padding:6px 16px;font-size:13px;font-weight:600;color:var(--gold2);margin-bottom:28px;letter-spacing:0.5px}
@@ -197,6 +238,24 @@ footer{flex-direction:column;text-align:center}
   </div>
   <a href="#cta" class="nav-cta">Talk to Us</a>
 </nav>
+
+<!-- PANCAKE OVERLAY -->
+<div class="nav-overlay" id="navOverlay">
+  <button class="nav-overlay-item" onclick="navGo('top')"><span class="nav-num">00</span>Home</button>
+  <button class="nav-overlay-item" onclick="navGo('how')"><span class="nav-num">01</span>How It Works</button>
+  <button class="nav-overlay-item" onclick="navGo('services')"><span class="nav-num">02</span>Services</button>
+  <button class="nav-overlay-item" onclick="navGo('pricing')"><span class="nav-num">03</span>Pricing</button>
+  <button class="nav-overlay-item" onclick="navGo('team')"><span class="nav-num">04</span>Team</button>
+  <button class="nav-overlay-item" onclick="navGo('cta')"><span class="nav-num">05</span>Get Started</button>
+  <div class="nav-overlay-foot">Ready to launch? <a href="mailto:declanhcornish@gmail.com">Book a free call</a></div>
+</div>
+
+<!-- PANCAKE BUTTON -->
+<button class="pancake-btn" id="pancakeBtn" aria-label="Open menu">
+  <span class="bar"></span>
+  <span class="bar"></span>
+  <span class="bar"></span>
+</button>
 
 <section>
 <div class="hero">
@@ -493,6 +552,22 @@ const co=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersect
 document.querySelectorAll('.stat-num[data-target]').forEach(el=>co.observe(el));
 const hw=document.querySelector('.hero-card-wrap');
 if(hw){let t=0;function fl(){t+=0.015;hw.style.transform=`translateY(${Math.sin(t)*7}px)`;requestAnimationFrame(fl);}fl();}
+
+// PANCAKE MENU
+const btn=document.getElementById('pancakeBtn');
+const overlay=document.getElementById('navOverlay');
+btn.addEventListener('click',()=>{
+  const open=overlay.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  document.body.style.overflow=open?'hidden':'';
+});
+function navGo(id){
+  overlay.classList.remove('open');
+  btn.classList.remove('open');
+  document.body.style.overflow='';
+  if(id==='top'){window.scrollTo({top:0,behavior:'smooth'});}
+  else{const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'});}
+}
 </script>
 </body>
 </html>
